@@ -28,7 +28,19 @@ const run = async() => {
         const todoCollection = client.db('LanTaburTask').collection('ToDo');
         const ongoingCollection = client.db('LanTaburTask').collection('OnGoing');
         const completedCollection = client.db('LanTaburTask').collection('Completed');
+        const usersCollection = client.db('LanTaburTask').collection('Users');
         
+        // 1. Create User. 
+        // Used in Register.js
+        // reason for using updateOne: no repeat of user(filter by email)
+        app.post('/user', async(req, res) => {
+            const user = req.body;            
+            const filter = {email: user.email}; 
+            const updatedDoc = { $set: user }
+            const options = { upsert: true }; 
+            const result = await usersCollection.updateOne(filter, updatedDoc, options ); 
+            res.send(result); 
+        })        
     }
     finally {
 
